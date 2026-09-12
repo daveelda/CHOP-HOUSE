@@ -14,7 +14,7 @@
   --brand: oklch(0.74 0.16 70);
 
   --dark: oklch(0.16 0.025 49);
-  --dark-foreground: oklch(0.97 0.018 73);
+  --dark-foreground: oklch(77.457% 0.13231 77.719);
   --dark-muted: oklch(0.56 0.055 62);
   --dark-border: oklch(0.27 0.035 48);
 
@@ -860,7 +860,7 @@ textarea {
   height: 5rem;
   border-radius: var(--radius-full);
   background-color: rgba(220, 80, 40, 0.1);
-  color: var(--primary);
+  color: var(--brand);
   display: grid;
   place-items: center;
   margin: 0 auto;
@@ -944,6 +944,10 @@ textarea {
   color: var(--foreground);
   margin-top: 0.75rem;
 }
+
+
+
+
 
 .cart-note {
   text-align: center;
