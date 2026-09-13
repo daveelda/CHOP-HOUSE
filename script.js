@@ -97,6 +97,22 @@ function renderDishes() {
   }).join("");
 }
 
+// HELPER TO CALCULATE & UPDATE CHECKOUT TOTALS ACCURATELY
+function updateCheckoutTotals() {
+  const subtotal = DISHES.reduce((sum, dish) => sum + (dish.price * (cart[dish.id] || 0)), 0);
+  const areaSelect = document.getElementById("order-area");
+  const deliveryFee = areaSelect ? (parseInt(areaSelect.value, 10) || 1500) : 1500;
+  const grandTotal = subtotal + deliveryFee;
+
+  const checkoutSubtotal = document.getElementById("checkout-subtotal");
+  const checkoutDelivery = document.getElementById("checkout-delivery");
+  const checkoutGrandTotal = document.getElementById("checkout-grand-total");
+
+  if (checkoutSubtotal) checkoutSubtotal.innerText = formatMoney(subtotal);
+  if (checkoutDelivery) checkoutDelivery.innerText = formatMoney(deliveryFee);
+  if (checkoutGrandTotal) checkoutGrandTotal.innerText = formatMoney(grandTotal);
+}
+
 // UPDATE CART 
 function updateCartUI() {
   const totalCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
@@ -144,6 +160,9 @@ function updateCartUI() {
     const cartTotal = document.getElementById("cart-total");
     if (cartSubtotal) cartSubtotal.innerText = formatMoney(subtotal);
     if (cartTotal) cartTotal.innerText = formatMoney(subtotal);
+
+    // Keep checkout prices synchronized with active cart items
+    updateCheckoutTotals();
   }
 }
 
@@ -192,8 +211,7 @@ function setupFormHandlers() {
   const areaSelect = document.getElementById("order-area");
   if (areaSelect) {
     areaSelect.addEventListener("change", () => {
-      const subtotal = DISHES.reduce((sum, dish) => sum + (dish.price * (cart[dish.id] || 0)), 0);
-      updateCheckoutTotals(subtotal);
+      updateCheckoutTotals();
     });
   }
 
@@ -275,6 +293,7 @@ function setupClickDelegation() {
       if (cartContent && checkoutView) {
         cartContent.classList.add("hidden");
         checkoutView.classList.remove("hidden");
+        updateCheckoutTotals(); // Calculates subtotal & grand total immediately on click
         resetCartDrawerHeaders("Delivery Details", "Checkout");
       }
       return;
@@ -305,7 +324,22 @@ function setupClickDelegation() {
       return;
     }
 
-    // 6. Mobile Menu Toggle
+    // 6. Mobile Menu Link Click Handler (Auto-Closes Mobile Nav Drawer)
+    const mobileNavLink = e.target.closest(".mobile-nav-link, .mobile-menu .btn");
+    if (mobileNavLink) {
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuIconOpen = document.getElementById("menu-icon-open");
+      const menuIconClose = document.getElementById("menu-icon-close");
+
+      if (mobileMenu) {
+        mobileMenu.classList.add("hidden");
+        if (menuIconOpen) menuIconOpen.classList.remove("hidden");
+        if (menuIconClose) menuIconClose.classList.add("hidden");
+      }
+      return;
+    }
+
+    // 7. Mobile Menu Toggle
     const menuToggleBtn = e.target.closest("#menu-toggle");
     if (menuToggleBtn) {
       e.preventDefault();
