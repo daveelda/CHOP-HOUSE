@@ -4,7 +4,7 @@ const DISHES = [
   { id: 2, name: "Pepper Soup", description: "Deeply spiced goat-meat pepper soup with uziza leaves, a ChopHouse staple since day one.", price: 4200, image: "images/pepper-soup.jpg" },
   { id: 3, name: "Egusi Soup & Pounded Yam", description: "Richly blended melon seed soup with stockfish, beef, and spinach. Served with silky pounded yam.", price: 6800, image: "images/egusi.jpg", tag: "Chef's Pick" },
   { id: 4, name: "Suya Platter", description: "Thinly sliced spiced beef suya, skewered and fire-grilled, served with raw onions, tomatoes, and yaji spice.", price: 3900, image: "images/suya.jpg" },
-  { id: 5, name: "Ofe Onugbu & Fufu", description: "Bitter-leaf soup prepared with assorted meats and crayfish, served with freshly pounded cocoyam fufu.", price: 5900, image: "images/onugbu.jpg" },
+  { id: 5, name: "Ofe Olugbu & Fufu", description: "Bitter-leaf soup prepared with assorted meats and crayfish, served with freshly pounded cocoyam fufu.", price: 5900, image: "images/onugbu.jpg" },
   { id: 6, name: "Grilled Tilapia & Fried Plantain", description: "Whole tilapia marinated in house spice blend, charcoal-grilled and served with sweet fried plantain.", price: 7200, image: "images/tilapia.jpg", tag: "New" }
 ];
 
@@ -251,19 +251,24 @@ function setupFormHandlers() {
       }
 
       if (!hasError) {
-        // Complete Order & Clear State Across Entire UI
+        // Clear active cart state completely
         cart = {}; 
         updateCartUI();
-        renderDishes(); // Re-renders menu grid so dish badges clear completely
+        renderDishes();
 
+        // Switch to Order Confirmation View
         document.getElementById("checkout-view").classList.add("hidden");
         document.getElementById("order-success-view").classList.remove("hidden");
         
-        resetCartDrawerHeaders("Confirmed", "Success");
+        // Update Drawer Header cleanly without showing "(0)"
+        const stepTitle = document.getElementById("cart-step-title");
+        const mainHeading = document.getElementById("cart-main-heading");
+        if (stepTitle) stepTitle.innerText = "Order Placed";
+        if (mainHeading) mainHeading.innerHTML = "Success ✓";
         
         const successMsg = document.getElementById("success-message");
         if (successMsg) {
-          successMsg.innerText = `Thanks ${name}! Your order has been dispatched. Our rider will reach out to ${phone} upon arrival.`;
+          successMsg.innerText = `Thanks ${name}! Your order has been placed. Our team will reach out to ${phone} upon arrival.`;
         }
       }
     });
