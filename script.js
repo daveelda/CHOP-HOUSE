@@ -12,7 +12,7 @@ let cart = {};
 
 const formatMoney = (val) => `₦${val.toLocaleString("en-NG")}`;
 
-//  OPEN/CLOSE CART SHII
+// OPEN/CLOSE CART HANDLERS
 window.openCart = function() {
   const overlay = document.getElementById("cart-drawer-overlay");
   if (overlay) {
@@ -97,9 +97,14 @@ function renderDishes() {
   }).join("");
 }
 
-// HELPER TO CALCULATE & UPDATE CHECKOUT TOTALS ACCURATELY
+// CALCULATE SUBTOTAL
+function getCartSubtotal() {
+  return DISHES.reduce((sum, dish) => sum + (dish.price * (cart[dish.id] || 0)), 0);
+}
+
+// UPDATE CHECKOUT TOTALS
 function updateCheckoutTotals() {
-  const subtotal = DISHES.reduce((sum, dish) => sum + (dish.price * (cart[dish.id] || 0)), 0);
+  const subtotal = getCartSubtotal();
   const areaSelect = document.getElementById("order-area");
   const deliveryFee = areaSelect ? (parseInt(areaSelect.value, 10) || 1500) : 1500;
   const grandTotal = subtotal + deliveryFee;
@@ -113,12 +118,12 @@ function updateCheckoutTotals() {
   if (checkoutGrandTotal) checkoutGrandTotal.innerText = formatMoney(grandTotal);
 }
 
-// UPDATE CART 
+// UPDATE CART UI STATE
 function updateCartUI() {
   const totalCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
-  const subtotal = DISHES.reduce((sum, dish) => sum + (dish.price * (cart[dish.id] || 0)), 0);
+  const subtotal = getCartSubtotal();
 
-  // Update badge counter
+  // Update badge counters
   const cartBadges = document.querySelectorAll(".cart-badge");
   cartBadges.forEach(badge => {
     badge.innerText = totalCount;
@@ -137,21 +142,21 @@ function updateCartUI() {
   const checkoutView = document.getElementById("checkout-view");
   const successView = document.getElementById("order-success-view");
 
-  // Show/Hide views based on item count
   if (totalCount === 0) {
     if (cartEmptyState) cartEmptyState.classList.remove("hidden");
     if (cartContentView) cartContentView.classList.add("hidden");
     if (checkoutView) checkoutView.classList.add("hidden");
     if (successView) successView.classList.add("hidden");
+    resetCartDrawerHeaders("Your Order", "Cart");
   } else {
     if (cartEmptyState) cartEmptyState.classList.add("hidden");
 
-    // Only reveal cart content if not currently in checkout or success view
     const isCheckoutVisible = checkoutView && !checkoutView.classList.contains("hidden");
     const isSuccessVisible = successView && !successView.classList.contains("hidden");
 
     if (!isCheckoutVisible && !isSuccessVisible) {
       if (cartContentView) cartContentView.classList.remove("hidden");
+      resetCartDrawerHeaders("Your Order", "Cart");
     }
 
     renderCartItems();
@@ -161,7 +166,6 @@ function updateCartUI() {
     if (cartSubtotal) cartSubtotal.innerText = formatMoney(subtotal);
     if (cartTotal) cartTotal.innerText = formatMoney(subtotal);
 
-    // Keep checkout prices synchronized with active cart items
     updateCheckoutTotals();
   }
 }
@@ -197,6 +201,7 @@ function renderCartItems() {
     </div>
   `).join("");
 }
+
 function resetCartDrawerHeaders(step, main) {
   const stepTitle = document.getElementById("cart-step-title");
   const mainHeading = document.getElementById("cart-main-heading");
@@ -246,9 +251,10 @@ function setupFormHandlers() {
       }
 
       if (!hasError) {
-        // Complete Order & Show Success View
-        cart = {}; // Empty cart
+        // Complete Order & Clear State Across Entire UI
+        cart = {}; 
         updateCartUI();
+        renderDishes(); // Re-renders menu grid so dish badges clear completely
 
         document.getElementById("checkout-view").classList.add("hidden");
         document.getElementById("order-success-view").classList.remove("hidden");
@@ -264,10 +270,10 @@ function setupFormHandlers() {
   }
 }
 
-// EVENT DELEGATION FOR ALL CLICKS
+// EVENT DELEGATION FOR CLICK EVENTS
 function setupClickDelegation() {
   document.addEventListener("click", (e) => {
-    // 1. Open Cart Button Clicks (Desktop & Mobile)
+    // 1. Open Cart
     const cartToggle = e.target.closest("#cart-toggle-desktop, #cart-toggle-mobile, .cart-btn");
     if (cartToggle) {
       e.preventDefault();
@@ -275,17 +281,17 @@ function setupClickDelegation() {
       return;
     }
 
-    // 2. Close Cart Button Clicks
+    // 2. Close Cart (X button OR backdrop overlay click outside)
     const cartCloseBtn = e.target.closest("#cart-close, #cart-backdrop, #cart-browse-btn");
-    if (cartCloseBtn) {
+    if (cartCloseBtn || e.target.id === "cart-drawer-overlay") {
       e.preventDefault();
       window.closeCart();
       return;
     }
 
-    // 3. Proceed to Checkout View (Fix for Checkout Button)
-    const checkoutBtn = e.target.closest("#proceed-checkout-btn, .cart-footer .btn-primary");
-    if (checkoutBtn && !checkoutBtn.id.includes("place-order")) {
+    // 3. Proceed to Checkout View
+    const proceedBtn = e.target.closest("#proceed-checkout-btn, .cart-footer .btn-primary");
+    if (proceedBtn && !proceedBtn.id.includes("place-order")) {
       e.preventDefault();
       const cartContent = document.getElementById("cart-content");
       const checkoutView = document.getElementById("checkout-view");
@@ -293,7 +299,7 @@ function setupClickDelegation() {
       if (cartContent && checkoutView) {
         cartContent.classList.add("hidden");
         checkoutView.classList.remove("hidden");
-        updateCheckoutTotals(); // Calculates subtotal & grand total immediately on click
+        updateCheckoutTotals();
         resetCartDrawerHeaders("Delivery Details", "Checkout");
       }
       return;
@@ -314,7 +320,7 @@ function setupClickDelegation() {
       return;
     }
 
-    // 5. Success Screen Reset Button
+    // 5. Reset Success Screen
     const successCloseBtn = e.target.closest("#success-close-btn");
     if (successCloseBtn) {
       e.preventDefault();
@@ -324,7 +330,7 @@ function setupClickDelegation() {
       return;
     }
 
-    // 6. Mobile Menu Link Click Handler (Auto-Closes Mobile Nav Drawer)
+    // 6. Mobile Menu Link Click Handler (Auto-Closes Mobile Drawer)
     const mobileNavLink = e.target.closest(".mobile-nav-link, .mobile-menu .btn");
     if (mobileNavLink) {
       const mobileMenu = document.getElementById("mobile-menu");
