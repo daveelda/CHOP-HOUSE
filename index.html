@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -9,6 +9,7 @@
       content="Discover ChopHouse's fire-cooked West African favourites, from smoky jollof to rich soups and suya."
     />
 
+    <!-- Open Graph / Social Media -->
     <meta
       property="og:title"
       content="ChopHouse — Authentic West African Food"
@@ -20,6 +21,7 @@
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -27,6 +29,7 @@
       rel="stylesheet"
     />
 
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -121,77 +124,7 @@
         </div>
       </div>
 
-      <!-- SHOPPING CART -->
-      <div id="cart-drawer-overlay" class="cart-overlay hidden">
-        <div id="cart-backdrop" class="cart-backdrop"></div>
-        <aside
-          class="cart-drawer"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Your cart"
-        >
-          <div class="cart-header">
-            <div>
-              <p class="eyebrow">Your Order</p>
-              <h2 class="cart-title">
-                Cart <span id="cart-header-count">(0)</span>
-              </h2>
-            </div>
-            <button id="cart-close" class="icon-btn" aria-label="Close cart">
-              <svg
-                class="icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
-          <div id="cart-empty" class="cart-empty">
-            <span class="empty-icon-box">
-              <svg
-                class="icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <path d="M16 10a4 4 0 01-8 0" />
-              </svg>
-            </span>
-            <h3>Your cart is empty</h3>
-            <p>Add something delicious from our menu.</p>
-            <button id="cart-browse-btn" class="btn btn-primary">
-              Browse the menu
-            </button>
-          </div>
-
-          <div id="cart-content" class="cart-content hidden">
-            <div id="cart-items" class="cart-items-list"></div>
-
-            <div class="cart-footer">
-              <div class="cart-summary-row">
-                <span>Subtotal</span>
-                <span id="cart-subtotal">₦0</span>
-              </div>
-              <div class="cart-summary-row total">
-                <span>Total</span>
-                <span id="cart-total">₦0</span>
-              </div>
-              <button class="btn btn-primary btn-block btn-lg">Checkout</button>
-              <p class="cart-note">Taxes and delivery calculated at checkout</p>
-            </div>
-          </div>
-        </aside>
-      </div>
-
-      <!-- Mobile Menu -->
+      <!-- Mobile Navigation-->
       <div id="mobile-menu" class="mobile-menu hidden">
         <nav>
           <a href="#home" class="mobile-nav-link">Home</a>
@@ -259,7 +192,7 @@
         </div>
       </section>
 
-      <!-- MENU SECTION incom..-->
+      <!-- MENU SECTION -->
       <section id="menu" class="menu-section">
         <div class="container">
           <div class="section-title">
@@ -271,7 +204,9 @@
             </p>
           </div>
 
-          <div id="dishes-grid" class="dishes-grid"></div>
+          <div id="dishes-grid" class="dishes-grid">
+            <!-- Dynamically populated via script.js -->
+          </div>
         </div>
       </section>
 
@@ -330,8 +265,8 @@
 
             <div class="contact-rows">
               <div class="contact-row">
-                <span class="icon-box"
-                  ><svg
+                <span class="icon-box">
+                  <svg
                     class="icon"
                     viewBox="0 0 24 24"
                     fill="none"
@@ -339,16 +274,17 @@
                     stroke-width="2"
                   >
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                    <circle cx="12" cy="10" r="3" /></svg
-                ></span>
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </span>
                 <div>
                   <small>Address</small>
                   <p>14 Admiralty Way, Lekki Phase 1, Lagos</p>
                 </div>
               </div>
               <div class="contact-row">
-                <span class="icon-box"
-                  ><svg
+                <span class="icon-box">
+                  <svg
                     class="icon"
                     viewBox="0 0 24 24"
                     fill="none"
@@ -357,16 +293,17 @@
                   >
                     <path
                       d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"
-                    /></svg
-                ></span>
+                    />
+                  </svg>
+                </span>
                 <div>
                   <small>Phone</small>
                   <p>+234 801 234 5678</p>
                 </div>
               </div>
               <div class="contact-row">
-                <span class="icon-box"
-                  ><svg
+                <span class="icon-box">
+                  <svg
                     class="icon"
                     viewBox="0 0 24 24"
                     fill="none"
@@ -376,8 +313,9 @@
                     <path
                       d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
                     />
-                    <polyline points="22,6 12,13 2,6" /></svg
-                ></span>
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                </span>
                 <div>
                   <small>Email</small>
                   <p>hello@chophouse.ng</p>
@@ -473,8 +411,8 @@
           <h3 class="footer-heading">Opening Hours</h3>
           <div class="footer-hours">
             <span>Mon – Thu</span><span>11:00 – 22:00</span>
-            <span>Fri – Sat</span><span>11:00 – 23:00</span> <span>Sunday</span
-            ><span>12:00 – 21:00</span>
+            <span>Fri – Sat</span><span>11:00 – 23:00</span>
+            <span>Sunday</span><span>12:00 – 21:00</span>
           </div>
         </div>
 
@@ -557,6 +495,242 @@
         <span>Made with fire in Lagos, Nigeria.</span>
       </div>
     </footer>
+
+    <!-- SHOPPING CART  -->
+    <div id="cart-drawer-overlay" class="cart-overlay hidden">
+      <div id="cart-backdrop" class="cart-backdrop"></div>
+      <aside
+        class="cart-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Your cart"
+      >
+        <!-- Cart Header -->
+        <div class="cart-header">
+          <div>
+            <p class="eyebrow" id="cart-step-title">Your Order</p>
+            <h2 class="cart-title" id="cart-main-heading">
+              Cart <span id="cart-header-count">(0)</span>
+            </h2>
+          </div>
+          <button id="cart-close" class="icon-btn" aria-label="Close cart">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Empty Cart -->
+        <div id="cart-empty" class="cart-empty">
+          <span class="empty-icon-box">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
+          </span>
+          <h3>Your cart is empty</h3>
+          <p>Add something delicious from our menu.</p>
+          <button
+            id="cart-browse-btn"
+            class="btn btn-primary"
+            style="margin-top: 1rem"
+          >
+            Browse the menu
+          </button>
+        </div>
+
+        <!--Items List & Subtotal -->
+        <div id="cart-content" class="cart-content hidden">
+          <div id="cart-items" class="cart-items-list">
+            <!-- Dynamically populated via script.js -->
+          </div>
+
+          <div class="cart-footer">
+            <div class="cart-summary-row">
+              <span>Subtotal</span>
+              <span id="cart-subtotal">₦0</span>
+            </div>
+            <div class="cart-summary-row total">
+              <span>Total</span>
+              <span id="cart-total">₦0</span>
+            </div>
+            <button
+              id="proceed-checkout-btn"
+              class="btn btn-primary btn-block btn-lg"
+              style="margin-top: 1rem"
+            >
+              Proceed to Checkout →
+            </button>
+            <p class="cart-note">Delivery fees calculated at checkout</p>
+          </div>
+        </div>
+
+        <!--  Checkout Form -->
+        <div
+          id="checkout-view"
+          class="cart-content hidden"
+          style="overflow-y: auto; padding: 1.5rem"
+        >
+          <button
+            id="back-to-cart-btn"
+            class="btn btn-outline"
+            style="
+              margin-bottom: 1.25rem;
+              font-size: 0.75rem;
+              padding: 0.4rem 0.8rem;
+            "
+          >
+            ← Back to Items
+          </button>
+
+          <form id="order-form" novalidate>
+            <div class="form-field">
+              <label for="order-name">Full Name *</label>
+              <input
+                type="text"
+                id="order-name"
+                required
+                placeholder="e.g. David Emmanuella"
+              />
+              <span class="error-msg" id="err-order-name"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="order-phone">Phone Number *</label>
+              <input
+                type="tel"
+                id="order-phone"
+                required
+                placeholder="08012345678"
+              />
+              <span class="error-msg" id="err-order-phone"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="order-area">Delivery Area *</label>
+              <select
+                id="order-area"
+                style="
+                  width: 100%;
+                  border-radius: var(--radius-md);
+                  border: 1px solid var(--input);
+                  background-color: var(--background);
+                  padding: 0.75rem 1rem;
+                  color: inherit;
+                "
+              >
+                <option value="1500">Lekki Phase 1 / Ikoyi (₦1,500)</option>
+                <option value="2500">Victoria Island / Oniru (₦2,500)</option>
+                <option value="3500">Ikeja / Yaba / Surulere (₦3,500)</option>
+                <option value="4500">Ajah / Sangotedo (₦4,500)</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="order-address">Delivery Address *</label>
+              <textarea
+                id="order-address"
+                rows="2"
+                required
+                placeholder="House number, street name, landmarks..."
+              ></textarea>
+              <span class="error-msg" id="err-order-address"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="order-notes">Special Instructions (Optional)</label>
+              <textarea
+                id="order-notes"
+                rows="2"
+                placeholder="e.g. Make pepper soup extra spicy"
+              ></textarea>
+            </div>
+
+            <div
+              style="
+                border-top: 1px dashed var(--border);
+                margin: 1.25rem 0;
+                padding-top: 1rem;
+              "
+            >
+              <div class="cart-summary-row" style="font-size: 0.875rem">
+                <span>Food Subtotal</span>
+                <span id="checkout-subtotal">₦0</span>
+              </div>
+              <div
+                class="cart-summary-row"
+                style="font-size: 0.875rem; margin-top: 0.4rem"
+              >
+                <span>Delivery Fee</span>
+                <span id="checkout-delivery">₦1,500</span>
+              </div>
+              <div class="cart-summary-row total" style="margin-top: 0.75rem">
+                <span>Grand Total</span>
+                <span id="checkout-grand-total">₦0</span>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              id="place-order-btn"
+              class="btn btn-primary btn-block btn-lg"
+            >
+              Place Order
+            </button>
+          </form>
+        </div>
+
+        <!-- Order Confirmation -->
+        <div id="order-success-view" class="cart-empty hidden">
+          <span class="success-icon" style="margin: 0 auto 1.5rem auto">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </span>
+          <h3 style="font-family: var(--font-display); font-size: 1.5rem">
+            Order Received!
+          </h3>
+          <p
+            style="
+              margin-top: 0.5rem;
+              color: var(--muted-foreground);
+              font-size: 0.875rem;
+            "
+            id="success-message"
+          >
+            Your food is being prepared. We'll call you shortly to confirm
+            delivery.
+          </p>
+          <button
+            id="success-close-btn"
+            class="btn btn-primary btn-block"
+            style="margin-top: 2rem"
+          >
+            Back to Main Menu
+          </button>
+        </div>
+      </aside>
+    </div>
 
     <script src="script.js"></script>
   </body>

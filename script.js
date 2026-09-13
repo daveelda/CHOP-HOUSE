@@ -12,7 +12,7 @@ let cart = {};
 
 const formatMoney = (val) => `₦${val.toLocaleString("en-NG")}`;
 
-// GLOBAL OPEN/CLOSE HANDLERS
+//  OPEN/CLOSE CART SHII
 window.openCart = function() {
   const overlay = document.getElementById("cart-drawer-overlay");
   if (overlay) {
@@ -58,11 +58,12 @@ window.removeFromCart = function(dishId) {
   renderDishes();
 };
 
-// INITIAL RENDER
+// INITIAL RENDER & EVENT REGISTRATION
 document.addEventListener("DOMContentLoaded", () => {
   renderDishes();
   updateCartUI();
   setupClickDelegation();
+  setupFormHandlers();
 });
 
 // RENDER DISH CARDS
@@ -96,11 +97,12 @@ function renderDishes() {
   }).join("");
 }
 
-// UPDATE CART
+// UPDATE CART 
 function updateCartUI() {
   const totalCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
   const subtotal = DISHES.reduce((sum, dish) => sum + (dish.price * (cart[dish.id] || 0)), 0);
 
+  // Update badge counter
   const cartBadges = document.querySelectorAll(".cart-badge");
   cartBadges.forEach(badge => {
     badge.innerText = totalCount;
@@ -116,15 +118,28 @@ function updateCartUI() {
 
   const cartEmptyState = document.getElementById("cart-empty");
   const cartContentView = document.getElementById("cart-content");
+  const checkoutView = document.getElementById("checkout-view");
+  const successView = document.getElementById("order-success-view");
 
+  // Show/Hide views based on item count
   if (totalCount === 0) {
     if (cartEmptyState) cartEmptyState.classList.remove("hidden");
     if (cartContentView) cartContentView.classList.add("hidden");
+    if (checkoutView) checkoutView.classList.add("hidden");
+    if (successView) successView.classList.add("hidden");
   } else {
     if (cartEmptyState) cartEmptyState.classList.add("hidden");
-    if (cartContentView) cartContentView.classList.remove("hidden");
+
+    // Only reveal cart content if not currently in checkout or success view
+    const isCheckoutVisible = checkoutView && !checkoutView.classList.contains("hidden");
+    const isSuccessVisible = successView && !successView.classList.contains("hidden");
+
+    if (!isCheckoutVisible && !isSuccessVisible) {
+      if (cartContentView) cartContentView.classList.remove("hidden");
+    }
+
     renderCartItems();
-    
+
     const cartSubtotal = document.getElementById("cart-subtotal");
     const cartTotal = document.getElementById("cart-total");
     if (cartSubtotal) cartSubtotal.innerText = formatMoney(subtotal);
@@ -137,6 +152,12 @@ function renderCartItems() {
   if (!cartItemsList) return;
 
   const activeItems = DISHES.filter(d => cart[d.id]);
+
+  if (activeItems.length === 0) {
+    cartItemsList.innerHTML = "";
+    return;
+  }
+
   cartItemsList.innerHTML = activeItems.map(dish => `
     <div class="cart-item">
       <img src="${dish.image}" alt="${dish.name}" class="cart-item-img" onerror="this.style.backgroundColor='#2a221f';" />
@@ -157,11 +178,78 @@ function renderCartItems() {
     </div>
   `).join("");
 }
+function resetCartDrawerHeaders(step, main) {
+  const stepTitle = document.getElementById("cart-step-title");
+  const mainHeading = document.getElementById("cart-main-heading");
+  const totalCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+
+  if (stepTitle) stepTitle.innerText = step;
+  if (mainHeading) mainHeading.innerHTML = `${main} <span id="cart-header-count">(${totalCount})</span>`;
+}
+
+// FORM & CHECKOUT HANDLERS
+function setupFormHandlers() {
+  const areaSelect = document.getElementById("order-area");
+  if (areaSelect) {
+    areaSelect.addEventListener("change", () => {
+      const subtotal = DISHES.reduce((sum, dish) => sum + (dish.price * (cart[dish.id] || 0)), 0);
+      updateCheckoutTotals(subtotal);
+    });
+  }
+
+  const orderForm = document.getElementById("order-form");
+  if (orderForm) {
+    orderForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("order-name").value.trim();
+      const phone = document.getElementById("order-phone").value.trim();
+      const address = document.getElementById("order-address").value.trim();
+
+      let hasError = false;
+
+      document.getElementById("err-order-name").innerText = "";
+      document.getElementById("err-order-phone").innerText = "";
+      document.getElementById("err-order-address").innerText = "";
+
+      if (!name) {
+        document.getElementById("err-order-name").innerText = "Please enter your name";
+        hasError = true;
+      }
+
+      if (!phone || phone.length < 10) {
+        document.getElementById("err-order-phone").innerText = "Please enter a valid phone number";
+        hasError = true;
+      }
+
+      if (!address) {
+        document.getElementById("err-order-address").innerText = "Please enter your delivery address";
+        hasError = true;
+      }
+
+      if (!hasError) {
+        // Complete Order & Show Success View
+        cart = {}; // Empty cart
+        updateCartUI();
+
+        document.getElementById("checkout-view").classList.add("hidden");
+        document.getElementById("order-success-view").classList.remove("hidden");
+        
+        resetCartDrawerHeaders("Confirmed", "Success");
+        
+        const successMsg = document.getElementById("success-message");
+        if (successMsg) {
+          successMsg.innerText = `Thanks ${name}! Your order has been dispatched. Our rider will reach out to ${phone} upon arrival.`;
+        }
+      }
+    });
+  }
+}
 
 // EVENT DELEGATION FOR ALL CLICKS
 function setupClickDelegation() {
   document.addEventListener("click", (e) => {
-    // Open Cart Button Clicks (Desktop & Mobile)
+    // 1. Open Cart Button Clicks (Desktop & Mobile)
     const cartToggle = e.target.closest("#cart-toggle-desktop, #cart-toggle-mobile, .cart-btn");
     if (cartToggle) {
       e.preventDefault();
@@ -169,7 +257,7 @@ function setupClickDelegation() {
       return;
     }
 
-    // Close Cart Button Clicks
+    // 2. Close Cart Button Clicks
     const cartCloseBtn = e.target.closest("#cart-close, #cart-backdrop, #cart-browse-btn");
     if (cartCloseBtn) {
       e.preventDefault();
@@ -177,7 +265,47 @@ function setupClickDelegation() {
       return;
     }
 
-    // Mobile Menu Toggle
+    // 3. Proceed to Checkout View (Fix for Checkout Button)
+    const checkoutBtn = e.target.closest("#proceed-checkout-btn, .cart-footer .btn-primary");
+    if (checkoutBtn && !checkoutBtn.id.includes("place-order")) {
+      e.preventDefault();
+      const cartContent = document.getElementById("cart-content");
+      const checkoutView = document.getElementById("checkout-view");
+      
+      if (cartContent && checkoutView) {
+        cartContent.classList.add("hidden");
+        checkoutView.classList.remove("hidden");
+        resetCartDrawerHeaders("Delivery Details", "Checkout");
+      }
+      return;
+    }
+
+    // 4. Back to Cart Items Step
+    const backBtn = e.target.closest("#back-to-cart-btn");
+    if (backBtn) {
+      e.preventDefault();
+      const cartContent = document.getElementById("cart-content");
+      const checkoutView = document.getElementById("checkout-view");
+
+      if (cartContent && checkoutView) {
+        checkoutView.classList.add("hidden");
+        cartContent.classList.remove("hidden");
+        resetCartDrawerHeaders("Your Order", "Cart");
+      }
+      return;
+    }
+
+    // 5. Success Screen Reset Button
+    const successCloseBtn = e.target.closest("#success-close-btn");
+    if (successCloseBtn) {
+      e.preventDefault();
+      const successView = document.getElementById("order-success-view");
+      if (successView) successView.classList.add("hidden");
+      window.closeCart();
+      return;
+    }
+
+    // 6. Mobile Menu Toggle
     const menuToggleBtn = e.target.closest("#menu-toggle");
     if (menuToggleBtn) {
       e.preventDefault();
